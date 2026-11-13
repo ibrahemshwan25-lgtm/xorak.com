@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<بەرێوەبردنی دابەشکردنی خۆراک>
 <html lang="ckb" dir="rtl">
 <head>
     <meta charset="UTF-8">
