@@ -1,4 +1,4 @@
-<بەرێوەبردنی دابەشکردنی خۆراک>
+<!DOCTYPE html>
 <html lang="ckb" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -78,9 +78,18 @@
     </div>
 
     <!-- ===================================================================== -->
-    <!-- 1. LOGIN SCREEN -->
+    <!-- 1. LOGIN SCREEN (لاپەڕەی سەرەکی چوونەژوورەوە) -->
     <!-- ===================================================================== -->
-    <div id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 p-4">
+    <div id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 p-4 relative">
+        
+        <!-- Top Settings Button on Main Login Screen -->
+        <div class="absolute top-5 left-5">
+            <button type="button" onclick="openMainLoginSettingsModal()" class="px-4 py-2.5 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md text-white border border-white/20 font-bold text-sm shadow-lg transition flex items-center gap-2">
+                <i class="fa-solid fa-gear text-amber-300 text-base"></i>
+                <span>ڕێکخستن</span>
+            </button>
+        </div>
+
         <div class="max-w-md w-full bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden border border-wheat-200/50">
             <div class="bg-gradient-to-l from-wheat-600 via-wheat-500 to-amber-500 p-6 text-center text-white relative overflow-hidden">
                 <div class="w-20 h-20 mx-auto bg-white rounded-2xl shadow-lg flex items-center justify-center mb-3 wheat-glow">
@@ -121,11 +130,11 @@
                     </button>
                 </form>
 
-                <!-- Forgot Password Button -->
-                <div class="mt-4 text-center">
-                    <button type="button" onclick="openForgotPasswordModal()" class="text-xs font-bold text-wheat-700 hover:underline flex items-center justify-center gap-1.5 mx-auto">
-                        <i class="fa-solid fa-key"></i>
-                        <span>پاسۆردم لەبیرکردووە (گۆڕین لە ڕێگەی مۆبایل)</span>
+                <!-- Settings Button directly below Login Form -->
+                <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-center">
+                    <button type="button" onclick="openMainLoginSettingsModal()" class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-gear text-wheat-700"></i>
+                        <span>ڕێکخستن (ژمارە مۆبایل و گۆڕینی پاسۆرد بە کۆدی ٦ ژمارەیی)</span>
                     </button>
                 </div>
             </div>
@@ -196,7 +205,7 @@
                             <span>شاشەی پڕ</span>
                         </button>
                         <!-- Settings Button -->
-                        <button onclick="openSettingsModal()" class="px-3.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm transition flex items-center gap-1.5" title="ڕێکخستن و گۆڕینی پاسۆرد">
+                        <button onclick="openMainLoginSettingsModal()" class="px-3.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm transition flex items-center gap-1.5" title="ڕێکخستن و گۆڕینی پاسۆرد">
                             <i class="fa-solid fa-gear text-wheat-700"></i>
                             <span>ڕێکخستن</span>
                         </button>
@@ -409,7 +418,7 @@
                                 class="px-3.5 py-2 rounded-xl border border-slate-300 text-sm outline-none focus:border-emerald-500">
                         </div>
                         <div class="overflow-x-auto">
-                            <table class="w-full text-right border-collapse">
+                            <table class="w-full text-right border-collapse whitespace-nowrap">
                                 <thead>
                                     <tr class="bg-slate-50 text-slate-600 text-xs font-bold border-b border-slate-200">
                                         <th class="py-3 px-4">#</th>
@@ -511,7 +520,7 @@
 
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                     <div class="overflow-x-auto">
-                        <table class="w-full text-right border-collapse">
+                        <table class="w-full text-right border-collapse whitespace-nowrap">
                             <thead>
                                 <tr class="bg-slate-50 text-slate-600 text-xs font-bold border-b border-slate-200">
                                     <th class="py-3.5 px-4">#</th>
@@ -587,7 +596,7 @@
 
         let appState = {
             password: '009988',
-            adminPhone: '07501234567',
+            adminPhone: '',
             targetPeople: 1705,
             feePerPerson: 2000,
             currentSheetName: '',
@@ -690,7 +699,7 @@
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-2');
                 setTimeout(() => toast.remove(), 300);
-            }, 3500);
+            }, 4500);
         }
 
         function showConfirm(title, message, onConfirm) {
@@ -751,99 +760,59 @@
         }
 
         // =====================================================================
-        // FORGOT PASSWORD MODAL (From Login Screen)
+        // MAIN SCREEN SETTINGS MODAL (ژمارە مۆبایلی بەڕێوەبەر + کۆدی ٦ ژمارەیی)
         // =====================================================================
-        function openForgotPasswordModal() {
-            document.getElementById('modal-title').textContent = 'گۆڕینی پاسۆرد (پاسۆردم لەبیرکردووە)';
-            document.getElementById('modal-body').innerHTML = `
-                <div class="space-y-4">
-                    <p class="text-xs text-slate-600">ژمارە مۆبایلی بەڕێوەبەر بنووسە بۆ ناردنی کۆدی دڵنیایی (OTP):</p>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">ژمارەی مۆبایل:</label>
-                        <input type="text" id="fp-phone" placeholder="0750XXXXXXX" dir="ltr" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 outline-none text-sm font-mono text-right">
-                    </div>
-                    <button type="button" onclick="sendOtpForForgot()" class="w-full py-2.5 rounded-xl bg-wheat-600 hover:bg-wheat-700 text-white font-bold text-sm">ناردنی کۆدی دڵنیایی</button>
-
-                    <div id="fp-verify-section" class="hidden space-y-3 pt-3 border-t border-slate-100">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">کۆدی دڵنیایی (٤ ژمارە):</label>
-                            <input type="text" id="fp-code" placeholder="1234" dir="ltr" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none text-sm font-mono tracking-widest text-center">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">پاسۆردی نوێ:</label>
-                            <input type="password" id="fp-new-pass" placeholder="پاسۆردی نوێ بنووسە" dir="ltr" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none text-sm font-mono">
-                        </div>
-                        <button type="button" onclick="verifyAndResetPassword()" class="w-full py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm">پاشەکەوتکردنی پاسۆردی نوێ</button>
-                    </div>
-                </div>
-            `;
-            openUniversalModal();
-        }
-
-        function sendOtpForForgot() {
-            const phone = normalizeDigits(document.getElementById('fp-phone').value.trim());
-            if (phone !== normalizeDigits(appState.adminPhone)) {
-                showToast('ئەم ژمارە مۆبایلە لە سیستەمدا تۆمار نەکراوە!', 'error');
-                return;
-            }
-            generatedOtpCode = Math.floor(1000 + Math.random() * 9000).toString();
-            showToast(`کۆدی دڵنیایی نێردرا: [${generatedOtpCode}]`, 'info');
-            document.getElementById('fp-verify-section').classList.remove('hidden');
-        }
-
-        function verifyAndResetPassword() {
-            const enteredCode = normalizeDigits(document.getElementById('fp-code').value.trim());
-            const newPass = normalizeDigits(document.getElementById('fp-new-pass').value.trim());
-
-            if (enteredCode !== generatedOtpCode) {
-                showToast('کۆدی دڵنیایی هەڵەیە!', 'error');
-                return;
-            }
-            if (newPass.length < 4) {
-                showToast('پاسۆرد دەبێت لانیکەم ٤ پیت یان ژمارە بێت', 'warning');
-                return;
-            }
-
-            appState.password = newPass;
-            saveState();
-            closeUniversalModal();
-            showToast('پاسۆردی سیستەم بە سەرکەوتوویی گۆڕدرا!', 'success');
-        }
-
-        // =====================================================================
-        // SETTINGS MODAL (Main Page)
-        // =====================================================================
-        function openSettingsModal() {
+        function openMainLoginSettingsModal() {
+            const hasSavedPhone = appState.adminPhone && appState.adminPhone.trim() !== '';
             document.getElementById('modal-title').textContent = 'ڕێکخستنی سیستەم و گۆڕینی پاسۆرد';
             document.getElementById('modal-body').innerHTML = `
                 <div class="space-y-5">
+                    <!-- Section 1: Save / Update Admin Phone -->
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
-                        <h4 class="text-xs font-bold text-slate-700 uppercase">١. گۆڕینی ژمارەی مۆبایلی بەڕێوەبەر</h4>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">ژمارەی مۆبایلی ئێستا:</label>
-                            <input type="text" id="set-admin-phone" value="${appState.adminPhone}" dir="ltr" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none text-sm font-mono text-right">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-extrabold text-slate-800">١. دیاریکردن و تۆمارکردنی ژمارە مۆبایلی بەڕێوەبەر</h4>
+                            ${hasSavedPhone ? `<span class="text-[11px] bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full font-bold" dir="ltr">${appState.adminPhone}</span>` : `<span class="text-[11px] bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full font-bold">ژمارە دانەنراوە</span>`}
                         </div>
-                        <button type="button" onclick="updateAdminPhone()" class="py-2 px-4 rounded-xl bg-slate-800 text-white font-bold text-xs">نوێکردنەوەی ژمارەی مۆبایل</button>
+                        <p class="text-xs text-slate-500">سەرەتا ژمارە مۆبایلی بەڕێوەبەر لێرە دابنێ و پاشەکەوتی بکە بۆ ئەوەی بتوانیت کۆدی ٦ ژمارەیی وەربگریت.</p>
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <input type="text" id="main-admin-phone-input" value="${appState.adminPhone || ''}" placeholder="نموونە: 0750XXXXXXX" dir="ltr" 
+                                class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 outline-none text-sm font-mono text-right bg-white">
+                            <button type="button" onclick="saveMainAdminPhone()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs whitespace-nowrap transition">
+                                <i class="fa-solid fa-floppy-disk ml-1"></i> پاشەکەوتکردنی ژمارە
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
-                        <h4 class="text-xs font-bold text-slate-700 uppercase">٢. گۆڕینی پاسۆرد لە ڕێگەی کۆدی مۆبایل</h4>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">پاسۆردی کۆن:</label>
-                            <input type="password" id="set-old-pass" placeholder="پاسۆردی کۆن بنووسە" dir="ltr" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none text-sm font-mono">
-                        </div>
-                        <button type="button" onclick="sendOtpForSettings()" class="py-2 px-4 rounded-xl bg-wheat-600 hover:bg-wheat-700 text-white font-bold text-xs">ناردنی کۆدی دڵنیایی بۆ مۆبایل</button>
+                    <!-- Section 2: Change Password via 6-Digit OTP Code -->
+                    <div class="bg-wheat-50/60 p-4 rounded-2xl border border-wheat-200 space-y-3">
+                        <h4 class="text-xs font-extrabold text-slate-800">٢. گۆڕینی پاسۆرد لە ڕێگەی کۆدی ٦ ژمارەیی (OTP)</h4>
+                        <p class="text-xs text-slate-600">دوگمەی خوارەوە دابگرە بۆ ناردنی کۆدێکی <strong>٦ ژمارەیی</strong> بۆ ژمارە مۆبایلە تۆمارکراوەکەی بەڕێوەبەر:</p>
+                        
+                        <button type="button" onclick="send6DigitOtpCode()" class="w-full py-2.5 px-4 rounded-xl bg-wheat-600 hover:bg-wheat-700 text-white font-bold text-sm shadow-sm transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>ناردنی کۆدی ٦ ژمارەیی بۆ مۆبایل</span>
+                        </button>
 
-                        <div id="set-verify-section" class="hidden space-y-3 pt-2">
+                        <div id="otp-6digit-banner" class="hidden bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-center">
+                            <span class="text-xs text-emerald-800 block">کۆدی ٦ ژمارەیی نێردرا بۆ ژمارە <strong dir="ltr">${appState.adminPhone}</strong>:</span>
+                            <span id="otp-6digit-display" class="text-xl font-black font-mono tracking-widest text-emerald-700 mt-1 block" dir="ltr">------</span>
+                        </div>
+
+                        <div id="otp-6digit-verify-box" class="hidden space-y-3 pt-3 border-t border-wheat-200/70">
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">کۆدی دڵنیایی (٤ ژمارە):</label>
-                                <input type="text" id="set-code" placeholder="1234" dir="ltr" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none text-sm font-mono tracking-widest text-center">
+                                <label class="block text-xs font-bold text-slate-700 mb-1">کۆدە ٦ ژمارەییەکە لێرە بنووسە:</label>
+                                <input type="text" id="input-6digit-code" maxlength="6" placeholder="XXXXXX" dir="ltr" 
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 outline-none text-base font-mono tracking-widest text-center bg-white font-bold">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">پاسۆردی نوێ:</label>
-                                <input type="password" id="set-new-pass" placeholder="پاسۆردی نوێ بنووسە" dir="ltr" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none text-sm font-mono">
+                                <label class="block text-xs font-bold text-slate-700 mb-1">پاسۆردی نوێ بنووسە:</label>
+                                <input type="password" id="input-new-password-6digit" placeholder="پاسۆردی نوێ بنووسە..." dir="ltr" 
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 outline-none text-sm font-mono bg-white">
                             </div>
-                            <button type="button" onclick="verifyAndChangePassSettings()" class="w-full py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm">پاشەکەوتکردنی پاسۆردی نوێ</button>
+                            <button type="button" onclick="confirm6DigitPasswordChange()" class="w-full py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-sm shadow-md transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>پەسەندکردن و گۆڕینی پاسۆرد</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -851,45 +820,60 @@
             openUniversalModal();
         }
 
-        function updateAdminPhone() {
-            const newPhone = normalizeDigits(document.getElementById('set-admin-phone').value.trim());
-            if (!newPhone) {
-                showToast('تکایە ژمارەی مۆبایل بە دروستی بنووسە', 'error');
+        function saveMainAdminPhone() {
+            const phoneInput = document.getElementById('main-admin-phone-input');
+            const cleanPhone = normalizeDigits(phoneInput.value.trim());
+            if (!cleanPhone || cleanPhone.length < 7) {
+                showToast('تکایە ژمارەیەکی مۆبایلی دروست بنووسە!', 'error');
                 return;
             }
-            appState.adminPhone = newPhone;
+            appState.adminPhone = cleanPhone;
             saveState();
-            showToast('ژمارەی مۆبایلی بەڕێوەبەر نوێکرایەوە', 'success');
+            openMainLoginSettingsModal();
+            showToast(`ژمارە مۆبایلی بەڕێوەبەر (${cleanPhone}) بە سەرکەوتوویی پاشەکەوت کرا`, 'success');
         }
 
-        function sendOtpForSettings() {
-            const oldPass = normalizeDigits(document.getElementById('set-old-pass').value.trim());
-            if (oldPass !== appState.password) {
-                showToast('پاسۆردی کۆن هەڵەیە!', 'error');
+        function send6DigitOtpCode() {
+            if (!appState.adminPhone || appState.adminPhone.trim() === '') {
+                showToast('سەرەتا لە بەشی یەکەمدا ژمارە مۆبایلی بەڕێوەبەر دابنێ و پاشەکەوتی بکە!', 'warning');
+                document.getElementById('main-admin-phone-input')?.focus();
                 return;
             }
-            generatedOtpCode = Math.floor(1000 + Math.random() * 9000).toString();
-            showToast(`کۆدی دڵنیایی نێردرا بۆ (${appState.adminPhone}): [${generatedOtpCode}]`, 'info');
-            document.getElementById('set-verify-section').classList.remove('hidden');
+
+            // Generate 6-digit random code (100000 - 999999)
+            generatedOtpCode = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            const banner = document.getElementById('otp-6digit-banner');
+            const display = document.getElementById('otp-6digit-display');
+            const verifyBox = document.getElementById('otp-6digit-verify-box');
+
+            if (banner && display && verifyBox) {
+                banner.classList.remove('hidden');
+                display.textContent = generatedOtpCode;
+                verifyBox.classList.remove('hidden');
+            }
+
+            showToast(`کۆدی ٦ ژمارەیی نێردرا: [${generatedOtpCode}]`, 'info');
         }
 
-        function verifyAndChangePassSettings() {
-            const enteredCode = normalizeDigits(document.getElementById('set-code').value.trim());
-            const newPass = normalizeDigits(document.getElementById('set-new-pass').value.trim());
+        function confirm6DigitPasswordChange() {
+            const enteredCode = normalizeDigits(document.getElementById('input-6digit-code').value.trim());
+            const newPass = normalizeDigits(document.getElementById('input-new-password-6digit').value.trim());
 
-            if (enteredCode !== generatedOtpCode) {
-                showToast('کۆدی دڵنیایی هەڵەیە!', 'error');
+            if (!generatedOtpCode || enteredCode !== generatedOtpCode) {
+                showToast('کۆدە ٦ ژمارەییەکە هەڵەیە! تکایە بە دروستی بینووسە.', 'error');
                 return;
             }
-            if (newPass.length < 4) {
-                showToast('پاسۆرد دەبێت لانیکەم ٤ پیت یان ژمارە بێت', 'warning');
+            if (!newPass || newPass.length < 4) {
+                showToast('پاسۆردی نوێ دەبێت لانیکەم ٤ پیت یان ژمارە بێت!', 'warning');
                 return;
             }
 
             appState.password = newPass;
+            generatedOtpCode = null;
             saveState();
             closeUniversalModal();
-            showToast('پاسۆرد بە سەرکەوتوویی گۆڕدرا!', 'success');
+            showToast('پاسۆردی سیستەم بە سەرکەوتوویی گۆڕدرا! ئێستا دەتوانیت بە پاسۆردە نوێیەکە بچیتە ژوورەوە.', 'success');
         }
 
         function switchTab(tabName) {
@@ -1549,7 +1533,7 @@
   body { font-family: Tahoma, Arial, sans-serif; padding: 24px; color: #1e293b; }
   h1 { color: #92400e; margin-bottom: 4px; }
   .meta { background: #fef3c7; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
   th, td { border: 1px solid #cbd5e1; padding: 8px 10px; text-align: right; }
   th { background: #f1f5f9; }
 </style>
@@ -1724,8 +1708,8 @@
                 let accountHtml = `<span class="text-xs text-slate-400">-</span>`;
                 if (benDists.length > 0) {
                     accountHtml = hasUnpaid
-                        ? `<div class="flex flex-col items-center gap-0.5"><span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 whitespace-nowrap">باقی حساب</span><span class="text-[11px] font-bold text-slate-600">${formatNumber(totalFee)} د.ع</span></div>`
-                        : `<div class="flex flex-col items-center gap-0.5"><span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 whitespace-nowrap">حساب وصل</span><span class="text-[11px] font-bold text-emerald-700">${formatNumber(totalFee)} د.ع</span></div>`;
+                        ? `<div class="flex items-center justify-center gap-1.5"><span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 whitespace-nowrap">باقی حساب</span><span class="text-[11px] font-bold text-slate-600">${formatNumber(totalFee)} د.ع</span></div>`
+                        : `<div class="flex items-center justify-center gap-1.5"><span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 whitespace-nowrap">حساب وصل</span><span class="text-[11px] font-bold text-emerald-700">${formatNumber(totalFee)} د.ع</span></div>`;
                 }
 
                 const dateHtml = latestDist
@@ -1733,24 +1717,24 @@
                     : `<span class="text-xs text-slate-400 italic">وەرنەگیراوە</span>`;
 
                 const receivedHtml = item.receivedFoods.length > 0
-                    ? item.receivedFoods.map(f => `<span class="inline-block bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-2 py-0.5 rounded-lg m-0.5">${f.name}</span>`).join('')
+                    ? `<div class="flex flex-wrap items-center gap-1">${item.receivedFoods.map(f => `<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-2 py-0.5 rounded-lg whitespace-nowrap">${f.name}</span>`).join('')}</div>`
                     : `<span class="text-xs text-slate-400 italic">هیچی وەرنەگرتووە</span>`;
 
                 const missingHtml = item.missingFoods.length > 0
-                    ? item.missingFoods.map(f => {
+                    ? `<div class="flex flex-wrap items-center gap-1">${item.missingFoods.map(f => {
                         const qty = Number((f.perPerson * item.members).toFixed(2));
-                        return `<span class="inline-block bg-red-50 text-red-700 border border-red-200 text-xs font-bold px-2 py-0.5 rounded-lg m-0.5">${f.name} (${qty} ${f.unit})</span>`;
-                    }).join('')
+                        return `<span class="bg-red-50 text-red-700 border border-red-200 text-xs font-bold px-2 py-0.5 rounded-lg whitespace-nowrap">${f.name} (${qty} ${f.unit})</span>`;
+                    }).join('')}</div>`
                     : `<span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-xs font-extrabold px-2.5 py-1 rounded-full"><i class="fa-solid fa-check"></i> هەمووی وەرگرتووە</span>`;
 
                 return `
                     <tr class="hover:bg-slate-50 transition">
                         <td class="py-3 px-4 font-bold text-slate-400">${idx + 1}</td>
-                        <td class="py-3 px-4 font-bold text-slate-800">${item.name}</td>
+                        <td class="py-3 px-4 font-bold text-slate-800 whitespace-nowrap">${item.name}</td>
                         <td class="py-3 px-4 text-center">
-                            <span class="bg-wheat-100 text-wheat-800 font-extrabold px-2.5 py-1 rounded-lg text-xs">${item.members} نەفەر</span>
+                            <span class="bg-wheat-100 text-wheat-800 font-extrabold px-2.5 py-1 rounded-lg text-xs whitespace-nowrap">${item.members} نەفەر</span>
                         </td>
-                        <td class="py-3 px-4 font-mono text-slate-600 text-xs" dir="ltr">${item.phone || '-'}</td>
+                        <td class="py-3 px-4 font-mono text-slate-600 text-xs whitespace-nowrap" dir="ltr">${item.phone || '-'}</td>
                         <td class="py-3 px-4">${receivedHtml}</td>
                         <td class="py-3 px-4">${missingHtml}</td>
                         <td class="py-3 px-4 text-center">${accountHtml}</td>
@@ -1853,7 +1837,7 @@
                         <div><span class="text-slate-500 block">باقی حساب:</span><strong class="text-amber-700">${formatNumber(arch.totalUnpaid)} د.ع</strong></div>
                     </div>
                     <div class="max-h-72 overflow-y-auto border border-slate-200 rounded-xl">
-                        <table class="w-full text-right text-xs">
+                        <table class="w-full text-right text-xs whitespace-nowrap">
                             <thead class="bg-slate-100 text-slate-700 font-bold sticky top-0">
                                 <tr>
                                     <th class="p-2.5">#</th>
@@ -1870,7 +1854,7 @@
                                         <td class="p-2.5 font-bold text-slate-400">${i + 1}</td>
                                         <td class="p-2.5 font-bold">${r.beneficiaryName}</td>
                                         <td class="p-2.5">${r.members}</td>
-                                        <td class="p-2.5">${r.items.map(it => `${it.name} (${it.quantity} ${it.unit})`).join('، ')}</td>
+                                        <td class="p-2.5">${r.items.map(it => `<span class="inline-block bg-slate-100 px-1.5 py-0.5 rounded mx-0.5">${it.name} (${it.quantity} ${it.unit})</span>`).join(' ')}</td>
                                         <td class="p-2.5 font-bold ${r.paymentStatus === 'paid' ? 'text-emerald-700' : 'text-amber-700'}">${r.paymentStatus === 'paid' ? 'حساب وصل' : 'باقی حساب'}</td>
                                         <td class="p-2.5 text-slate-500">${r.note || '-'}</td>
                                     </tr>
